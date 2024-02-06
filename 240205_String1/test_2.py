@@ -1,1 +1,1 @@
-'A\nB'
+print('A\nB')
