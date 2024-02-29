@@ -14,7 +14,7 @@ for t in range(1, T+1):
     H = 0
 
     for i in range(N):
-        print(f'{i}행 확인중')
+        # print(f'{i}행 확인중')
         h1 = arr[i][0]
         d = 0
         max_h = 0
@@ -71,7 +71,7 @@ for t in range(1, T+1):
                         break
 
         else:
-            print(f'{i} 가능')
+            # print(f'{i} 가능')
             cnt += 1
     print(cnt)
 
@@ -83,12 +83,15 @@ for t in range(1, T+1):
         for i in range(N):
             if max_h < arr[i][j]:
                 max_h = arr[i][j]
+            # print(max_h)
             # 높이의 변화가 있을 경우
             if h1 != arr[i][j]:
                 # 경사로 설치 가능 여부 판단
                 # 높이가 높아졌을 때
+                print(arr[i][j])
                 if h1 < arr[i][j]:
                     H = arr[i][j] - h1
+                    print(h1, H, X, d)
                     # 경사로 설치 가능
                     if d >= H * X:
                         d = 1
