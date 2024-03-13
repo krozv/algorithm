@@ -9,7 +9,7 @@
 2-1. 후진 불가일 경우 작동 멈춤
 3. 4칸 중 청소되지 않은 빈칸 있을 경우 -> 반시계 방향으로 회전
 """
-def dfs(x, y, d):
+def f(x, y, d):
     global number_of_room
     delta = [[-1, 0], [0, 1], [1, 0], [0, -1]]
     # 현재 칸이 청소되지 않았을 경우
@@ -26,7 +26,7 @@ def dfs(x, y, d):
         nj = y + delta[d][1]
         # 90도 돌아간 방향이 청소되지 않은 빈 칸인 경우 한 칸 전진
         if arr[ni][nj] == 0:
-            dfs(ni, nj, d)
+            f(ni, nj, d)
             break
         # 아닐 경우 다시 처음으로 돌아감
     # 주변 4칸 중 청소되지 않은 빈 칸이 없는 경우 -> 한 칸 후진
@@ -34,7 +34,7 @@ def dfs(x, y, d):
         ni = x - delta[d][0]
         nj = y - delta[d][1]
         if arr[ni][nj] != 1:
-            dfs(ni, nj, d)
+            f(ni, nj, d)
         else:
             return
 
@@ -47,5 +47,5 @@ r, c, d = map(int, input().split()) # r, c 현재 로봇청소기 좌표, d: 로
 arr = [list(map(int, input().split())) for _ in range(N)]   # 1: 벽, 0: 청소되지않음
 
 number_of_room = 0
-dfs(r, c, d)
+f(r, c, d)
 print(number_of_room)
