@@ -29,20 +29,23 @@ for _ in range(T):
         for j in range(M):
             if arr[i][j]:
                 temp = arr[i][j]
-                for d in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
-                    ni = i + d[0]
-                    nj = (j + d[1] + M) % M
-                    if 0<=ni<N and temp == arr[ni][nj]:
-                        arr[ni][nj] = 0
-                        arr[i][j] = 0
-                        deleted = True
+                q = deque()
+                q.append([i, j])
+                while q:
+                    for d in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+                        ni = q[0][0] + d[0]
+                        nj = (q[0][1] + d[1] + M) % M
+                        if 0<=ni<N and temp == arr[ni][nj]:
+                            arr[ni][nj] = 0
+                            arr[i][j] = 0
+                            q.append([ni, nj])
+                            deleted = True
+                    q.popleft()
         s += sum(arr[i])
         num += (M - arr[i].count(0))
-    print('start')
-    for i in range(N):
-        print(arr[i])
+
     # 평균 계산 후 숫자 수정
-    if not deleted:
+    if not deleted and num:
         average = s / num
         for i in range(N):
             for j in range(M):
@@ -50,13 +53,9 @@ for _ in range(T):
                     arr[i][j] -= 1
                 elif arr[i][j] and arr[i][j] < average:
                     arr[i][j] += 1
-        print('not deleted')
-        print(average)
-        for i in range(N):
-            print(arr[i])
+
 ss = 0
 for i in range(N):
     ss += sum(arr[i])
-    print(arr[i])
 print(ss)
 
