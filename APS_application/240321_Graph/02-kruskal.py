@@ -5,7 +5,6 @@
 # -> 싸이클 여부? -> union-find algorithm 활용
 
 import sys
-from heapq import heappush, heappop
 sys.stdin = open('input.txt', 'r')
 
 def find_set(x):
@@ -28,6 +27,7 @@ def union(x, y):
         parents[y] = x
     else:
         parents[x] = y
+
 
 V, E = map(int, input().split())
 # 간선 정보 저장
@@ -53,7 +53,7 @@ for s, e, w in edges:
     # 싸이클이 없으면 방문 처리
     union(s, e)
     sum_weight += w
-
+    # 노드를 모두 다 들리면 break
     if cnt == V - 1:
         break
 
