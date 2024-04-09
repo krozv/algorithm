@@ -3,7 +3,6 @@ import sys
 input = sys.stdin.readline
 def f(s):
     """
-    i: 지나간 숫자
     s: 선택한 숫자의 개수
     """
     # 기저
