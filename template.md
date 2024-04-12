@@ -9,12 +9,13 @@
 -
 
 ## How to solve
+
+### Method
+
+
 ### Constraint
 1. 시간 복잡도
    
 2. 공간 복잡도
-
-### Method
-
 
 ### Review
