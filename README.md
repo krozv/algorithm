@@ -1,23 +1,13 @@
-# algorithm
+# Algorithm
+- 알고리즘 공부 목적으로 만들어진 레포지토리
+- 해당 레포지토리는 프로그래밍 언어 별로 나뉘어 있음
+---
+[Python](./Python)
+- ssafy 알고리즘 수업 내용 정리
+- 백준, SWEA 등 문제풀이
 
-## APS
-- List
-- String
-- Stack
-- Queue
-- Tree
+[C++](./C++)
+- 강의 내용 정리
 
-## APS_application
-- brute-force
-- greedy
-- divide and conquer
-- backtracking
-- graph
-
-## Review
-- 복습한 SWEA 문제 모음
-
-## Solving
-- Baekjoon
-- softeer
-- SWEA
+[Java](./Java)
+- 강의 내용 정리
