@@ -1,3 +1,31 @@
+# [baekjoon] 10799. 쇠막대기
+
+## Data Structure
+
+- stack
+
+## Algorithm
+
+- .
+
+## How to solve
+
+### Method
+
+- 괄호의 모양에 따라 case를 분할해서 쇠막대기의 개수를 세었음
+- '('일 경우 스택에 append 하여 잘린 쇠막대기의 개수를 파악함
+
+### Constraint
+1. 시간 복잡도
+   - 1초 : 1,000,000,000
+   - n <= 100,000
+   - O(n)
+2. 공간 복잡도
+
+### Review
+- 메모리: 32336 KB
+- 시간: 64 ms
+```python
 # 10799. 쇠막대기
 import sys
 sys.stdin = open('input.txt', 'r')
@@ -25,3 +53,4 @@ for char in string:
         stack.append(char)
     prev = char
 print(cnt)
+```
