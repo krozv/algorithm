@@ -22,7 +22,7 @@
 ### Review
 - 메모리: KB
 - 시간: ms
-```python
+```cpp
 
 ```
 
