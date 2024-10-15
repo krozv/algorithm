@@ -19,14 +19,17 @@ for i in range(N):
     # _, *medal = map(int, input().split())
     # medal_dict[i] = medal
 
-print(medal_list)
 medal_list.sort(key=lambda x: (-x[1], -x[2], -x[3]))
-print(medal_list)
 # K국가가 몇등인지?
 cnt = 1
-for medal_info in medal_list:
-    
-    idx, *prev = medal_info
-
-    if idx == K:
-        print('이거당')
+prev = medal_list[0][1:]
+for idx, medal_info in enumerate(medal_list):
+    country, *medal = medal_info
+    if prev == medal:
+        pass
+    else:
+        cnt = idx + 1
+    prev = medal
+    if country == K:
+        print(cnt)
+        break
