@@ -26,16 +26,123 @@ sys.stdin = open("input.txt", "r")
 input = sys.stdin.readline
 
 
+# array안에서 만들 수 있는 최댓값 구하는 함수
+# 그냥 최댓값 구하는 함수 아님
 def find_max_value():
     return 10
 
 
-def move_block(arr, dir):
-    di, dj = dir
+# 방향 delta에 따라서 블럭 이동하는 함수
+def move_block(arr, delta):
+    di, dj = delta
+    # 방향에 따라서 시작점 다름
+    """
+    상(-1, 0): 세로 방향으로 0부터
+    하(1, 0): 세로 방향으로 N-1부터
+    좌(0, -1): 가로 방향으로 0부터
+    우(0, 1): 가로 방향으로 N-1부터
+    """
+
+    # 예시: 상(-1, 0)일 때
+    for j in range(N):
+        for i in range(1, N):
+            for k in range(1, i+1):
+                if arr[i-k][j] == 0:
+                    arr[i-k][j], arr[i-k+1][j] = arr[i-k+1][j], arr[i-k][j]
+    # 예시: 하(1, 0)일 때
+    for j in range(N):
+        for i in range(N-2, -1, -1):
+            for k in range(1, N-i):
+                if arr[i+k][j] == 0:
+                    arr[i+k][j], arr[i+k-1][j] = arr[i+k-1][j], arr[i+k][j]
+    # 좌(-1, 0)일 때
+    for i in range(N):
+        for j in range(1, N):
+            for k in range(1, j+1):
+                if arr[i][j-k] == 0:
+                    arr[i][j-k], arr[i][j-k+1] = arr[i][j-k+1], arr[i][j-k]
+    # 우 (1, 0)일 때
+    for i in range(N):
+        for j in range(N-2, -1, -1):
+            for k in range(1, N-1):
+                if arr[i][j+k]:
+                    arr[i][j+k], arr[i][j+k-1] = arr[i][j+k-1], arr[i][j+k]
     return arr
 
-def combine_block(arr):
+
+# 같은 블럭 결합하는 함수
+def combine_block(arr, delta):
+    di, dj = delta
+    # 예시: 상(-1, 0)일 때
+    for j in range(N):
+        for i in range(1, N):
+            for k in range(1, i + 1):
+                if arr[i - k][j] == 0:
+                    arr[i - k][j], arr[i - k + 1][j] = arr[i - k + 1][j], arr[i - k][j]
+    # 예시: 하(1, 0)일 때
+    for j in range(N):
+        for i in range(N - 2, -1, -1):
+            for k in range(1, N - i):
+                if arr[i + k][j] == 0:
+                    arr[i + k][j], arr[i + k - 1][j] = arr[i + k - 1][j], arr[i + k][j]
     return arr
+
+
+# arr안의 가장 큰 값, 두번째로 큰 값 리턴하는 함수
+def find_val(arr):
+    total = []
+    for row in arr:
+        total.extend(row)
+    total.sort(reverse=True)
+    if len(total) > 1:
+        return total[0], total[1]
+    return total[0], None
+
+
+# 지수 구하는 함수
+def calculate_factor(num):
+    if not num:
+        return None
+    cnt = 0
+    while num != 1:
+        num //= 2
+        cnt += 1
+    return cnt
+
+
+def dfs(cnt, val1, val2, arr):
+    """
+    cnt: 현재 이동횟수
+    val1: 가장 큰 값
+    val2: 두번째로 큰 값
+    arr: 현재 블럭 배열
+    """
+    print(cnt, val1, val2)
+    global max_val, result
+    # backtracking
+    # 1. 이미 max_val 나온 경우
+    if max_val == val1:
+        return val1
+    # 2. 더 진행해도 최댓값(result) 나오지 않을 경우
+    a = calculate_factor(val1)
+    b = calculate_factor(val2)
+    if (a - b + 1) > (5 - cnt):
+        return val1
+    # 3. cnt == 4: return val
+    if cnt == 4:
+        return val1
+    # 방향에 따른 블록 이동
+    arr = move_block(arr, direction[cnt])
+    for row in arr:
+        print(row)
+    print('------------------')
+    # 이동된 블록 합치기
+    arr = combine_block(arr, direction[cnt])
+    # 현재까지의 최댓값 current_max 계산
+    x = 0
+    for row in arr:
+        x = max(x, max(row))
+    dfs(cnt+1, val1, val2, arr)
 
 
 # input
@@ -50,18 +157,14 @@ max_val = find_max_value()
 # 가능한 방향의 조합 구하기(direction의 index)
 cases = list(product(range(0, 4), repeat=5))
 # 가능한 방향에 따라 최댓값 계산
-for case in cases:
+result = 0
+# val1, val2 탐색 후 dfs
+val1, val2 = find_val(arr)
+
+# for case in cases:
+for case in [(0, 1, 2, 3, 0)]:
     # case = [0, 0, 0, 0, 0] 방향 리스트임
-    
-    for dir in case:
-        # backtracking
-        # 1. 이미 max_val 나온 경우
-        # 2. 더 진행해도 최댓값 나오지 않을 경우
+    val = dfs(0, val1, val2, arr)
+    # result = max(val, result)
 
-        # 방향에 따른 블록 이동
-        arr = move_block(arr, direction[dir])
-        # 이동된 블록 합치기
-        arr = combine_block(arr)
-        # 현재까지의 최댓값 current_max 계산
-
-        pass
+print(result)
