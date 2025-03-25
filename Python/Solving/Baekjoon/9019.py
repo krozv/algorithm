@@ -18,65 +18,70 @@ import sys
 from collections import deque
 sys.stdin = open('input.txt', 'rt', encoding='UTF8')
 input = sys.stdin.readline
-debug = True
+debug = False
 
 def debug_print(text):
     if debug: print(text)
 
 def calculate(A, B):
     """
-    A, B: string으로 이루어진 두 숫자
+    A, B: integer 이루어진 두 숫자
     return: 명령어
     """
     q = deque()
     visited = [0] * 10000
-    q.append([A, ''])
-    cnt = 0
+    res = []
+    q.append([A, res])
+    visited[A] = 1
+
     while q:
-        if cnt > 3:
-            break
-        num, command = q.popleft()
-        visited[int(num)] = 1
-        # debug_print(num)
+        num, res = q.popleft()
         debug_print(num)
-        debug_print(command)
+        debug_print(res)
         # B랑 비교
-        if A == B:
-            break
+        if num == B:
+            return res
         # D
-        d_num = 0
-        if int(num) * 2 >= 9999:
-            d_num = int(num) * 2 % 10000 
-        else:
-            d_num = int(num) * 2
+        d_num = int(num) * 2 % 10000
         if not visited[d_num]:
-            q.append([str(d_num), command+'D'])
+            visited[d_num] = 1
+            new_res = []
+            new_res.extend(res)
+            new_res.append('D')
+            q.append([d_num, new_res])
         # S
-        s_num = 0
-        if int(num) == 0:
-            s_num = 9999
-        else:
-            s_num = int(num) - 1
+        s_num = (int(num) + 9999) % 10000
         if not visited[s_num]:
-            q.append([str(s_num), command+'S'])
+            visited[s_num] = 1
+            new_res = []
+            new_res.extend(res)
+            new_res.append('S')
+            q.append([s_num, new_res])
         # L
-        l_num = num[1:] + num[0]
-        if not visited[int(l_num)]:
-            q.append([l_num, command+'L'])
+        l_num = (num % 1000) * 10 + num // 1000
+        if not visited[l_num]:
+            visited[l_num] = 1
+            new_res = []
+            new_res.extend(res)
+            new_res.append('L')
+            q.append([l_num, new_res])
         # R
-        r_num = num[-1] + num[:-1]
-        if not visited[int(r_num)]:
-            q.append([r_num, command+'R'])
-        # cnt += 1
-    return command
+        r_num = (num // 10) + (num % 10) * 1000
+        if not visited[r_num]:
+            visited[r_num] = 1
+            new_res = []
+            new_res.extend(res)
+            new_res.append('R')
+            q.append([r_num, new_res])
+    return res
 
 def solution():
     T = int(input())
     for _ in range(T):
-        A, B = input().split()
-        num_A, num_B = A.zfill(4), B.zfill(4)
-        res = calculate(num_A, num_B)
-        print(res)
+        debug_print(f'-----------')
+        A, B = map(int, input().split())
+        res = calculate(A, B)
+        print(''.join(res))
 
 if __name__ == "__main__":
     solution()

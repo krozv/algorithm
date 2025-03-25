@@ -90,27 +90,31 @@ def combine_block(block, delta):
     # 예시: 상(-1, 0)일 때
     if delta == (-1, 0):
         for j in range(N):
-                for i in range(1, N):
-                    if arr[i-1][j] == arr[i][j]:
-                        arr[i-1][j], arr[i][j] = arr[i-1][j]*2, 0
+            for i in range(1, N):
+                if arr[i-1][j] == arr[i][j]:
+                    arr[i-1][j] *= 2
+                    arr[i][j] = 0
     # 예시: 하(1, 0)일 때
     if delta == (1, 0):
         for j in range(N):
             for i in range(N-2, -1, -1):
                 if arr[i+1][j] == arr[i][j]:
-                    arr[i+1][j], arr[i][j] = arr[i+1][j]*2, 0
+                    arr[i+1][j] *= 2
+                    arr[i][j] = 0
     # 좌(0, -1)일 때
     if delta == (0, -1):
         for i in range(N):
             for j in range(1, N):
                 if arr[i][j-1] == arr[i][j]:
-                    arr[i][j-1], arr[i][j] = arr[i][j-1]*2, 0
+                    arr[i][j-1] *= 2
+                    arr[i][j] = 0
     # 우 (0, 1)일 때
     if delta == (0, 1):
         for i in range(N):
             for j in range(N-2, -1, -1):
                 if arr[i][j+1] == arr[i][j]:
-                    arr[i][j+1], arr[i][j] = arr[i][j+1]*2, 0
+                    arr[i][j+1] *= 2
+                    arr[i][j] = 0
     return arr
 
 
@@ -136,44 +140,45 @@ def calculate_factor(num):
     return cnt
 
 
-def dfs(cnt, val1, val2, arr):
+def dfs(cnt, val1, val2, arr, delta):
     """
     cnt: 현재 이동횟수
     val1: 가장 큰 값
     val2: 두번째로 큰 값
     arr: 현재 블럭 배열
     """
-    global max_val, result, case
+
+    global max_val, result
     # backtracking
     # 1. 이미 max_val 나온 경우
-    if max_val == val1:
+    if val1 == max_val:
         return val1
     # 2. 더 진행해도 최댓값(result) 나오지 않을 경우
     a = calculate_factor(val1)
     b = calculate_factor(val2)
-    if (a - b + 1) > (5 - cnt):
+    if (a - b) > (5 - cnt):
         return val1
-    # 3. cnt == 4: return val
+    # 3. cnt == 5: return val
     if cnt == 5:
         return val1
+
     block = deepcopy(arr)
     # 방향에 따른 블록 이동
-    moved_block = move_block(block, direction[case[cnt]])
-    # block 이동 안했을 경우 그냥 return
-    if moved_block == block:
-        return val1
-    # 이동된 블록 합치기
-    combined_block = combine_block(moved_block, direction[case[cnt]])
-    completed_block = move_block(combined_block, direction[case[cnt]])
+    moved_block = move_block(block, delta)
 
+    # 이동된 블록 합치기
+    combined_block = combine_block(moved_block, delta)
+
+    completed_block = move_block(combined_block, delta)
+    # block 이동 안했을 경우 그냥 return
+    if completed_block == arr:
+        return val1
     # 현재까지의 최댓값 current_max 계산 val1, val2
     val1, val2 = find_val(completed_block)
-    # print(direction[case[cnt]])
-    # for row in completed_block:
-    #     print(row)
-    # print()
-    return dfs(cnt+1, val1, val2, completed_block)
-
+    val = 0
+    for d in direction:
+        val = dfs(cnt+1, val1, val2, completed_block, d)
+    return val
 
 # input
 N = int(input())
@@ -183,20 +188,13 @@ direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 # 만들 수 있는 최댓값 구하기
 max_val = find_max_value(arr)
-
-# 가능한 방향의 조합 구하기(direction의 index)
-cases = list(product(range(0, 4), repeat=5))
 # 가능한 방향에 따라 최댓값 계산
 result = 0
 # val1, val2 탐색 후 dfs
 val1, val2 = find_val(arr)
 
-# for case in cases:
-for case in cases:
-    # print(f'{case}---------------')
-    # case = [0, 0, 0, 0, 0] 방향 리스트임
-    block = deepcopy(arr)
-    val = dfs(0, val1, val2, block)
-    result = max(val, result)
-
-print(result)
+block = deepcopy(arr)
+val = 0
+for delta in direction:
+    val = max(val, dfs(0, val1, val2, block, delta))
+print(val)
