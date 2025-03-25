@@ -38,7 +38,7 @@ class Air:
         self.type: str = type # 'o' : 외부 공기, 'i': 내부 공기
 
     def __repr__(self):
-        return f'{'outer air' if self.type == 'o' else 'inner air'}입니다.'
+        return f'{"outer air" if self.type == "o" else "inner air"}입니다.'
         
 
 class Cheese:
@@ -50,29 +50,34 @@ class Cheese:
     #     if self.outer_air and self.outer_air >= 2:
 
 
-def dfs(i, j, visited):
-    for di, dj in delta:
-        ni, nj = i + di, j + dj
-        if 0<=ni<N and 0<=nj<M and field[ni][nj] == 0:
-            if not visited[ni][nj]:
-                visited[ni][nj] = 1
-                info[(ni, nj)] = Air(type = 'o')
-                dfs(ni, nj, visited)
+from collections import deque
 
-    return
+def bfs(i, j, visited):
+    queue = deque([(i, j)])
+    visited[i][j] = 1
+    info[(i, j)] = Air(type='o')
+
+    while queue:
+        ci, cj = queue.popleft()
+        for di, dj in delta:
+            ni, nj = ci + di, cj + dj
+            if 0 <= ni < N and 0 <= nj < M and field[ni][nj] == 0 and not visited[ni][nj]:
+                visited[ni][nj] = 1
+                info[(ni, nj)] = Air(type='o')
+                queue.append((ni, nj))
 
 
 def confirm_air():
     global field, info
 
-    visited = [[0] * M for _ in range(M)]    
+    visited = [[0] * M for _ in range(N)]    
     # 외부 공기 파악
     for i in range(N):
         for j in range(M):
             if (i == 0 or j == 0) and field[i][j] == 0:
                 # key가 없을때
                 info[(i, j)] = Air(type = 'o')
-                dfs(i, j, visited)
+                bfs(i, j, visited)
 
     # 내부 공기 파악
     for i in range(N):
@@ -100,7 +105,8 @@ def confirm_cheese():
                                 if air.type == 'o':
                                     cheese.outer_air += 1
                 else:
-                    cheese = info[(i, j)]
+                    cheese: Cheese = info[(i, j)]
+                    cheese.outer_air = 0
                     for di, dj in delta:
                         ni, nj = i + di, j + dj
                         if 0<=ni<N and 0<=nj<M and field[ni][nj] == 0:
@@ -123,8 +129,8 @@ def melt_cheese():
                     cnt -= 1
 
     for i in range(N):
-        print(field[i])
-    print()
+        print_debug(field[i])
+    print_debug('')
 
     return
 
@@ -132,9 +138,9 @@ def solution():
     global cnt, field
 
     for i in range(N):
-        print(field[i])
-    print()
-    test = 1
+        print_debug(field[i])
+    print_debug('')
+    test = 0
     while cnt:
         confirm_air()
         confirm_cheese()
