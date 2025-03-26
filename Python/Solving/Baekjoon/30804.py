@@ -27,6 +27,9 @@ def solution():
         temp = set(tang)
         temp.add(fruits[s+1])
 
+
+        
+
         # s가 이동 가능한 경우
         if len(temp) <= 2:
             # s 이동하고, tang 뒤에 넣는다
